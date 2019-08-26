@@ -43,6 +43,20 @@ class cadastrar:
                 x += 1
         return
 
+    def procValorCel(self, aba, vproc, col):
+        x = 2
+        while True:
+            cel = str( x )
+            if aba[col + cel].value == vproc:
+                print(cel, aba[col+cel].value)
+            elif aba[col + cel].value == None:
+                print("Acabou")
+                break
+            else:
+                pass
+            x += 1
+        return
+
 class arquivos:
     def __init__(self):
         self.tecnicos = None
