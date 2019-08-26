@@ -6,10 +6,10 @@ class cadastrar:
         self.nserie = serie
         self.datenow = self.hm_gen()
 
-    def hm_gen(self):
+    def hm_gen(self): #RETORNA DATA/HORA ATUAL
         from datetime import datetime
         data_comp_atual = datetime.now()
-        dh_atual = data_comp_atual.strftime( "%D" )
+        dh_atual = data_comp_atual.strftime( "%D" ) #( "%X" )
         return str( dh_atual )
 
     def getNome(self):

@@ -1,7 +1,7 @@
-from retiradas_class import cadastrar, arquivos
+from classes import cadastrar, arquivos
 
 planilha = 'nova.xlsx' # Digita o nome da planilha sendo utilizada
-aba_plan = 'aba_sheet' # Nome da aba dentro do arquivo que vai utilizar
+aba_plan = 'retiradas' # Nome da aba dentro do arquivo que vai utilizar
 
 cad = cadastrar(input("Nome: ").capitalize(), input("Nº Serie: "))
 read = arquivos()
