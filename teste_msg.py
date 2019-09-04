@@ -2,13 +2,14 @@ class msgs:
     def __init__(self):
         self.menu = """
 ////////////////////////////////////
-//     MENU DE OPÇÕES             //
+//         MENU DE OPÇÕES         //
+//      *** NÃO HABILITADOS       //        
 ////////////////////////////////////
 // A - Copy/Paste 2 planilhas     //
-// B - Procurar UL-CCT-IP-CNPJ    //
-// C - Inserir Loopback           //
-// D - Atividade lotericos        //
-// E - //
+// B - Localiz UL-CCT-IP     ***  //
+// C - Inserir Loopback      ***  //
+// D - Atividade lotericos   ***  //
+// E - Planilhas utilizadas       //
 // Q - Finalizar Programa         //
 ////////////////////////////////////
 """

@@ -2,10 +2,9 @@ from openpyxl import load_workbook, Workbook
 
 # Class para carregamento do arquivo de leitura
 class loadArq:
-    def __init__(self, planilha, aba_sheet):
-        self.plan = planilha
-        self.sheet = aba_sheet
-        self.alfab = '0ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    def __init__(self, plan, abaSheet):
+        self.plan = plan
+        self.sheet = abaSheet
 
     # Carregar a planilha
     def loadPlan(self):
