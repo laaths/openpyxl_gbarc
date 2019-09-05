@@ -6,9 +6,9 @@ class msgs:
 //      *** NÃO HABILITADOS       //        
 ////////////////////////////////////
 // A - Copy/Paste 2 planilhas     //
-// B - Localiz UL-CCT-IP     ***  //
-// C - Inserir Loopback      ***  //
-// D - Atividade lotericos   ***  //
+// B - Localiz UL-CCT-IP          //
+// C - Inserir Loopback***        //
+// D - ***                        //
 // E - Planilhas utilizadas       //
 // Q - Finalizar Programa         //
 ////////////////////////////////////
