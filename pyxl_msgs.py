@@ -5,11 +5,11 @@ class msgs:
 //         MENU DE OPÇÕES         //
 //      *** NÃO HABILITADOS       //        
 ////////////////////////////////////
-// A - Copy/Paste 2 planilhas     //
-// B - Localiz UL-CCT-IP          //
-// C - Inserir Loopback***        //
-// D - TESTES ***                 //
-// E - Planilhas utilizadas       //
+// A - Alimentar Controle     *** //
+// B - Localiz UL-CCT-IP      *** //
+// C - Inserir Loopback       *** //
+// D -                        *** //
+// E - Planilhas utilizadas   *** //
 // Q - Finalizar Programa         //
 ////////////////////////////////////
 """

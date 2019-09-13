@@ -1,6 +1,7 @@
-from class import loadArq, saveArq
+from classes import loadArq, saveArq
 from openpyxl import load_workbook, Workbook
 from msg import msgs
+import os
 
 # Procura e retorna lista com os dados
 def procPlan(planilha, aba, proc):
@@ -26,7 +27,6 @@ def verifArq():
         return wb
     except FileNotFoundError:
         try:
-            import os
             os.mkdir( "config" )
         except FileExistsError:
             pass
@@ -137,6 +137,14 @@ def loadConfPlanProc():
 
 def insertPlanList(orig_plan, orig_aba, dest_plan, dest_aba):
     proc = loadConfPlanProc()
+    if len(proc[0]) >= 12:
+        proccompl = []
+        for x in range(len(proc)):
+            proccompl.append(proc[x][40:51])
+        proc = proccompl
+    else:
+        return
+
     if proc == []:
         print("Preencha os circuitos na planilha")
         return
@@ -159,6 +167,16 @@ def insertPlanList(orig_plan, orig_aba, dest_plan, dest_aba):
             else:
                 pass
         print("CONCLUIDO")
+
+
+def testesopt():
+    proc = loadConfPlanProc()
+    test = []
+    for x in range(len(proc)):
+        test.append(proc[x][40:51])
+    insertPlanList(orig[0], orig[1], dest[0], dest[1])
+    return
+
 
 # print(procPlan(dest[0], dest[1], proc))
 # print(painel(orig[0], orig[1]))
@@ -184,7 +202,7 @@ def menuOpt():
         elif opt == 'C':  # INSERIR LOOPBACK
             pass
         elif opt == 'D':
-            pass
+            testesopt()
         elif opt == 'E':
             localizarDados()
         elif opt == 'F':
