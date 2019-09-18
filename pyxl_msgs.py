@@ -5,11 +5,11 @@ class msgs:
 //         MENU DE OPÇÕES         //
 //      *** NÃO HABILITADOS       //        
 ////////////////////////////////////
-// A - Alimentar Controle     *** //
-// B - Localiz UL-CCT-IP      *** //
-// C - Inserir Loopback       *** //
+// A - Alimentar Controle         //
+// B - Procurar UL-CCT-IP         //
+// C -                        *** //
 // D -                        *** //
-// E - Planilhas utilizadas   *** //
+// E - Planilhas utilizadas       //
 // Q - Finalizar Programa         //
 ////////////////////////////////////
 """
