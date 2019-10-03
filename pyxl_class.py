@@ -1,34 +1,24 @@
 from openpyxl import load_workbook, Workbook
 import os
-from paramiko import SSHClient
-import paramiko
 
-# Class para carregamento do arquivo de leitura
-class verifArq():
+class excell():
     def __init__(self):
-        self.origPlan = self.loadConfPlanOrig()[0]
-        self.origAba = self.loadConfPlanOrig()[1]
-        self.destPlan = self.loadConfPlanDest()[0]
-        self.destAba = self.loadConfPlanDest()[1]
+        self.origPlan = self.loadConfPlanOrig()
+        self.origPlanPanel = self.listColsPanel(self.origPlan)
+        self.destPlan = self.loadConfPlanDest()
+        self.destPlanPanel = self.listColsPanel(self.destPlan)
         self.proc = self.loadConfPlanProc()
         self.ulProc = self.loadConfPlanUl()
 
     ### GETS ###
+
     # PLANILHA DE ORIGEM
     def getOrigPlan(self):
         return self.origPlan
 
-    # ABA DE ORIGEM
-    def getOrigAba(self):
-        return self.origAba
-
     # PLANILHA DE DESTINO
     def getDestPlan(self):
         return self.destPlan
-
-    # ABA DE DESTINO
-    def getDestAba(self):
-        return self.destAba
 
     # LISTA DE CIRCUITOS PARA PROCURAR
     def getProc(self):
@@ -74,13 +64,19 @@ class verifArq():
             if ws.cell( row=7, column=3 ).value is None:
                 print( "\n CADASTRAR ABA DE DESTINO A SER UTILIZADA \n" )
                 ws['C7'] = "ex: Plan1"
+            if (ws.cell( row=3, column=1 ).value or
+                ws.cell( row=3, column=2 ).value or
+                ws.cell( row=3, column=3 ).value or
+                ws.cell( row=7, column=1 ).value or
+                ws.cell( row=7, column=2 ).value or
+                ws.cell( row=7, column=3 ).value) is None:
+                wb.save(dados[0])
             else:
                 pass
-            wb.save(dados[0])
             return wb
         except FileNotFoundError:
             try:
-                os.mkdir( "config" )
+                os.mkdir("config")
             except FileExistsError:
                 pass
             wb = Workbook()
@@ -105,18 +101,25 @@ class verifArq():
             wb.save( dados[0] )
             return wb
 
+    # CRIA UMA LISTA COM AS COLUNAS DO PAINEL DA PLANILHA
+    def listColsPanel(self, load):
+        cols = []
+        for cl in range( load.max_column ):
+            cols.append( load.cell( row=1, column=cl + 1 ).value )
+        return cols
+
     # CARREGA PLANILHA DE ORIGEM DOS DADOS
     def loadConfPlanOrig(self):
         wb = self.verifDirArq()
         ws = wb.active
-        orig = [ws.cell( row=3, column=1 ).value + ws.cell( row=3, column=2 ).value, ws.cell( row=3, column=3 ).value]
+        orig = load_workbook(ws.cell( row=3, column=1 ).value + ws.cell( row=3, column=2 ).value)[ws.cell( row=3, column=3 ).value]
         return orig
 
     # CARREGA PLANILHA DE DESTINO DOS DADOS
     def loadConfPlanDest(self):
         wb = self.verifDirArq()
         ws = wb.active
-        orig = [ws.cell( row=7, column=1 ).value + ws.cell( row=7, column=2 ).value, ws.cell( row=7, column=3 ).value]
+        orig = load_workbook(ws.cell( row=7, column=1 ).value + ws.cell( row=7, column=2 ).value)[ws.cell( row=7, column=3 ).value]
         return orig
 
     # LISTA DE CIRCUITOS
@@ -187,76 +190,63 @@ class verifArq():
         for x in range(len(self.ulProc)):
             print(self.ulProc[x])
 
-class excell( verifArq ):
-    def __init__(self):
-        super().__init__()
-
-    # Criar lista com itens da linha
-    def listCols(self, plan, aba, procItem):
-        load = load_workbook(plan)[aba]
+    # CRIA UMA LISTA COM OS ITENS DA LINHA
+    # COLUNA POR COLUNA
+    def listCols(self, load, procItem):
         cols = []
-        for cl in range(load.max_column ):
+        for cl in range( load.max_column ):
             for ln in range( load.max_row ):
-                position = load.cell(row=ln+1, column=cl+1).value
+                position = load.cell( row=ln + 1, column=cl + 1 ).value
                 if position == procItem:
-                    for cl2 in range(load.max_column ):
-                        cols.append(load.cell(row=ln+1, column=cl2+1).value)
+                    for cl2 in range( load.max_column ):
+                        cols.append( load.cell( row=ln + 1, column=cl2 + 1 ).value )
                     return cols
                 else:
                     pass
         return False
 
-    # Inserir dados na planilha
-    def comparRows(self, dest_panel, orig_panel, orig_dados):
+    # COMPARA E RETORNA O QUE TEM NA PLANILHA DE DESTINO
+    # NÃO GRAVA O QUE NAO EXISTE NO PAINEL DE DESTINO
+    def comparRows(self, orig_panel, dest_panel, orig_dados):
         dados = []
-        # for plan in range(ws.max_row):
-        for cl in range(len(dest_panel)):
+        for cl in range( len( dest_panel ) ):
             if dest_panel[cl] in orig_panel:
-                # print('Existe na planilha')
-                dados.append(orig_dados[orig_panel.index(dest_panel[cl])])
+                dados.append( orig_dados[orig_panel.index( dest_panel[cl] )] )
             elif dest_panel[cl] not in orig_panel:
-                dados.append(None)
+                dados.append( None )
             else:
                 pass
         return dados
 
-    # Retorna lista com numeros index da planilha
+    # # RETORNA LISTA COM OS NUMEROS DE INDEX DA PLANILHA
     def indexColl(self, panel):
         listIndex = []
-        for cl in range(len(panel)):
-            listIndex.append(panel.index(panel[cl]))
+        for cl in range( len( panel ) ):
+            listIndex.append( panel.index( panel[cl] ) )
         return listIndex
-
-    # Criar lista com Colunas do painel
-    def listColsPanel(self, plan, aba):
-        load = load_workbook(plan)[aba]
-        cols = []
-        for cl in range( load.max_column ):
-            cols.append( load.cell( row=1, column=cl + 1 ).value )
-        return cols
 
     # PROCURAR ITEM SIMPLES/UNICO
     def procItemSimple(self, procItem):
-        orig_dados = self.listCols(self.origPlan, self.origAba, procItem)  # Retorna dados procurado
-        orig_panel = self.listColsPanel(self.origPlan, self.origAba)
-        dest_dados = self.listCols(self.destPlan, self.destAba, procItem)  # Retorna dados procurado
-        dest_panel = self.listColsPanel(self.destPlan, self.destAba)
+        orig_dados = self.listCols( self.origPlan, procItem )  # Retorna dados procurado
+        orig_panel = self.origPlanPanel
+        dest_dados = self.listCols( self.destPlan, procItem )  # Retorna dados procurado
+        dest_panel = self.destPlanPanel
 
         if dest_dados != False:
-            print("ENCONTRADO", self.destPlan)
-            indexItens = self.indexColl(dest_panel)
-            for x in range(len(indexItens)):
+            print( "ENCONTRADO", self.destPlan )
+            indexItens = self.indexColl( dest_panel )
+            for x in range( len( indexItens ) ):
                 if dest_dados[indexItens[x]] != None:
-                    print(dest_panel[x]+":", dest_dados[indexItens[x]])
+                    print( dest_panel[x] + ":", dest_dados[indexItens[x]] )
                 else:
                     pass
             return
         elif orig_dados != False:
             print( "ENCONTRADO", self.origPlan )
-            indexItens = self.indexColl(orig_panel)
-            for x in range(len(indexItens)):
+            indexItens = self.indexColl( orig_panel )
+            for x in range( len( indexItens ) ):
                 if orig_dados[indexItens[x]] != None:
-                    print(orig_panel[x] + ":", orig_dados[indexItens[x]])
+                    print( orig_panel[x] + ":", orig_dados[indexItens[x]] )
                 else:
                     pass
             return
@@ -264,33 +254,19 @@ class excell( verifArq ):
             print( "\nNÃO ENCONTRADO NAS PLANILHAS" )
             return
 
+    # INSERE OS DADOS PROCURADOS NA PLANILHAD E DESTINO
     def insertPlanDados(self):
-        wdest = load_workbook( self.destPlan )
-        ws = wdest.active
-        for qtd in range(len(self.proc)):
-            orig_dados = self.listCols( self.origPlan, self.origAba, self.proc[qtd] )  # Retorna dados procurado
-            dest_dados = self.listCols( self.destPlan, self.destAba, self.proc[qtd] )  # Retorna dados procurado
+        wdest = self.destPlan
+        for qtd in range( len( self.proc ) ):
+            orig_dados = self.listCols( self.origPlan, self.proc[qtd] )  # Retorna dados procurado
+            dest_dados = self.listCols( self.destPlan, self.proc[qtd] )  # Retorna dados procurado
             if orig_dados is False:
-                print("NÃO ENCONTRADO\n")
+                print( "NÃO ENCONTRADO\n" )
             elif dest_dados != False:
-                print("\nEXISTENTE NA PLANILHA")
-                self.procItemSimple(self.proc[qtd])
+                print( "\nEXISTENTE NA PLANILHA" )
+                self.procItemSimple( self.proc[qtd] )
             else:
-                dadInsert = self.comparRows(self.listColsPanel( self.destPlan, self.destAba ), self.listColsPanel( self.origPlan, self.origAba ), orig_dados)
-                ws.append(dadInsert)
-        wdest.save(self.destPlan)
+                dadInsert = self.comparRows( self.origPlanPanel, self.destPlanPanel, orig_dados )
+                ws.append( dadInsert )
+        wdest.save( self.destPlan )
         return
-
-class sshConnect():
-    def __init__(self):
-        self.ssh = SSHClient()
-        self.ssh.load_system_host_keys()
-        self.ssh.set_missing_host_key_policy( paramiko.AutoAddPolicy() )
-        self.ssh.connect( hostname='10.61.184.54', username='tr521506', password='rspoa040' )
-
-    def exec_cmd(self, cmd):
-        stdin, stdout, stderr = self.ssh.exec_command( cmd )
-        if stderr.channel.recv_exit_status() != 0:
-            print(stderr.read())
-        else:
-            print(stdout.read())

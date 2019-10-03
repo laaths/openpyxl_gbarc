@@ -1,18 +1,6 @@
 from openpyxl import load_workbook, Workbook
-from pyxl_class import excell, verifArq, sshConnect
+from pyxl_class import excell
 from pyxl_msgs import msgs
-import os
-
-
-#ssh = sshConnect()
-#ssh.ssh.exec_command("ssh nho-rs-ser-a01")
-#ssh.exec_cmd("ssh nho-rs-ser-a01")
-#ssh.exec_cmd("telnet router 5293 10.252.102.194")
-#ssh.exec_cmd("tr521506")
-#ssh.exec_cmd("rspoa040")
-#ssh.exec_cmd("dis ip int br")
-
-
 
 def callClass(call):
     while True:
@@ -24,8 +12,8 @@ def callClass(call):
 
 # Menu de opções
 def menuOpt():
-    input(" PRESSIONE ENTER PARA INICIAR ")
     while True:
+        input( "\nPRESSIONE ENTER PARA INICIAR" )
         msgs().getMenu()
         opt = input("OPÇÃO DESEJADA: ").upper()
         if opt == 'Q':
@@ -33,8 +21,8 @@ def menuOpt():
         elif opt == 'A':  # COPIAR E COLAR LINHA DE UMA PLANILHA PRA OUTRA
             callClass(excell().insertPlanDados())
         elif opt == 'B':  # PROCURA SIMLPES
-            callClass(excell()).procItemSimple(input("Digite UL/CCT/IP: "))
-        elif opt == 'C':  # INSERIR LOOPBACK
+            callClass(excell().procItemSimple(input("Digite UL/CCT/IP: ")))
+        elif opt == 'C':  # INDEFINIDO
             pass
         elif opt == 'D':  # INDEFINIDO
             pass
@@ -46,3 +34,5 @@ def menuOpt():
             pass
         else:
             msgs().getMsg1()
+
+menuOpt()

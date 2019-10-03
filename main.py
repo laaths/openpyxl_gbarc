@@ -1,5 +1,7 @@
 from classes import loadArq, saveArq
 from openpyxl import load_workbook, Workbook
+from PyQt5 import QtWidgets, uic
+import sys
 from msg import msgs
 import os
 
